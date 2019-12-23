@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import '../widget/adaptive_button.dart';
 import 'package:pattern_formatter/pattern_formatter.dart';
 import 'package:intl/intl.dart';
 import '../model/size_config.dart';
@@ -50,7 +52,7 @@ class _NewTransactionState extends State<NewTransaction> {
                         });
                       }),
                 ),
-                onFieldSubmitted: (_) => _submitTransaction(),
+                onFieldSubmitted: (_) => submitTransaction(),
               ),
               SizedBox(height: 10),
               TextFormField(
@@ -69,7 +71,7 @@ class _NewTransactionState extends State<NewTransaction> {
                     },
                   ),
                 ),
-                onFieldSubmitted: (_) => _submitTransaction(),
+                onFieldSubmitted: (_) => submitTransaction(),
               ),
               Container(
                 height: 40,
@@ -97,13 +99,8 @@ class _NewTransactionState extends State<NewTransaction> {
                   ],
                 ),
               ),
-              RaisedButton(
-                  onPressed: _submitTransaction,
-                  color: Theme.of(context).primaryColor,
-                  child: Text(
-                    'Add transaction',
-                    style: Theme.of(context).textTheme.button,
-                  )),
+              AdaptiveButton(text: 'Add a Transaction', onclick: submitTransaction, ),
+                  SizedBox(height: 15),
             ],
           ),
         ),
@@ -111,7 +108,7 @@ class _NewTransactionState extends State<NewTransaction> {
     );
   }
 
-  void _submitTransaction() {
+  void submitTransaction() {
     if (amountController.text == null) {
       return;
     }

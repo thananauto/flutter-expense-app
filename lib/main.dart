@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import './widget/new_transaction.dart';
@@ -118,7 +120,15 @@ class _MyExpenseAppState extends State<MyExpenseApp> {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-    final appBar = AppBar(
+    final PreferredSizeWidget appBar = Platform.isIOS ? CupertinoNavigationBar(
+      middle: Text('My Expense Report'),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          GestureDetector(child: Icon(CupertinoIcons.add,),onTap: () => _startAddNewTransaction(),)
+        ],
+      ),
+    ) : AppBar(
       title: Text(
         'My Expense Report',
         style: Theme.of(context).appBarTheme.textTheme.title,
@@ -173,32 +183,32 @@ class _MyExpenseAppState extends State<MyExpenseApp> {
       ],
     );
     final landscape = SizeConfig.deviceOrientation == Orientation.landscape;
-    return SafeArea(
-      top: false,
-      child: Scaffold(
-        appBar: appBar,
-        body: SingleChildScrollView(
-          child: Container(
-            child: Column(
-              //mainAxisAlignment: MainAxisAlignment.start,
-              //crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                //add the code for switch
-                if(landscape) showIconButton,
-                if(!landscape) graphArea,
-                if(!landscape) txLists,
-                if(landscape) _showGraph ? graphArea : txLists,
-              ],
+    var _pageBody = SafeArea(
+        child: SingleChildScrollView(
+              child: Container(
+                child: Column(
+                  //mainAxisAlignment: MainAxisAlignment.start,
+                  //crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    //add the code for switch
+                    if(landscape) showIconButton,
+                    if(!landscape) graphArea,
+                    if(!landscape) txLists,
+                    if(landscape) _showGraph ? graphArea : txLists,
+                  ],
+                ),
+              ),
             ),
-          ),
-        ),
+    );
+        return Platform.isIOS ? CupertinoPageScaffold(child: _pageBody, navigationBar: appBar,) : Scaffold(
+          appBar: appBar,
+          body: _pageBody,
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         floatingActionButton: FloatingActionButton(
-          backgroundColor: Theme.of(context).primaryColor,
-          child: Icon(Icons.add),
-          onPressed: () => _startAddNewTransaction(),
+        backgroundColor: Theme.of(context).primaryColor,
+        child: Icon(Icons.add),
+        onPressed: () => _startAddNewTransaction(),
         ),
-      ),
-    );
+      );
   }
 }
